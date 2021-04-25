@@ -23,7 +23,7 @@ variable "user_username" {
 source "qemu" "base" {
   accelerator      = "hvf"
   boot_wait        = "1s"
-  cpus             = 2
+  cpus             = 6
   disk_image       = true
   disk_interface   = "virtio"
   disk_size        = 1024 * 32
@@ -44,7 +44,7 @@ source "qemu" "base" {
   qemuargs = [
     ["-drive", "file=vm/ubuntu/ubuntu.qcow2,if=virtio,cache=unsafe,format=qcow2,id=disk0"],
     ["-drive", "if=virtio,format=raw,file=cloud-init/nocloud.iso,readonly=on,id=cdrom0"],
-    ["-cpu", "qemu64"],
+    ["-cpu", "qemu64"]
   ]
 }
 
