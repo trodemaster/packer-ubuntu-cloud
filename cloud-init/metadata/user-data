@@ -1,0 +1,7 @@
+#cloud-config
+chpasswd: { expire: False }
+password: "$6$iO.4lzAjvg9s9YJO$ZxJm9TJez0LTxtw7M1/umos11KZyQgG5.LqRNUm.pmI3FS93Yb/y1MJzYeWwlI.azohkqtCeMW8Wyy0oftjMG0"
+ssh_pwauth: true
+timezone: US/Pacific
+users:
+- default
