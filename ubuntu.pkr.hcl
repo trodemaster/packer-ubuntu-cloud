@@ -16,45 +16,35 @@ variable "user_password" {
 
 variable "user_username" {
   type    = string
+  # username must match the config in cloud-init/metadata/user-data file
   default = "ubuntu"
 }
 
 source "qemu" "base" {
+  accelerator      = "hvf"
+  boot_wait        = "1s"
+  cpus             = 2
+  disk_image       = true
+  disk_interface   = "virtio"
+  disk_size        = 1024 * 32
+  display          = "cocoa,show-cursor=on"
+  format           = "qcow2"
+  http_directory   = "http"
   iso_checksum     = var.source_image_chksum
   iso_url          = var.source_image_url
+  machine_type     = "q35"
+  memory           = 1024 * 6
+  net_device       = "virtio-net"
   output_directory = "vm/ubuntu"
   shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
-  disk_size        = 1024 * 32
-  format           = "qcow2"
-  memory           = 1024 * 6
-  machine_type     = "q35"
-  cpus             = 2
-  accelerator      = "hvf"
-  http_directory   = "http"
-  disk_image       = true
   ssh_password     = var.user_password
-  ssh_username     = var.user_username
   ssh_timeout      = "20m"
+  ssh_username     = var.user_username
   vm_name          = "ubuntu.qcow2"
-  net_device       = "virtio-net"
-  disk_interface   = "virtio"
-  boot_wait        = "1s"
   qemuargs = [
-    ["-monitor", "stdio"],
     ["-drive", "file=vm/ubuntu/ubuntu.qcow2,if=virtio,cache=unsafe,format=qcow2,id=disk0"],
     ["-drive", "if=virtio,format=raw,file=cloud-init/nocloud.iso,readonly=on,id=cdrom0"],
-    ["-device", "virtio-gpu-pci"],
     ["-cpu", "qemu64"],
-    ["-display", "cocoa,show-cursor=on"],
-    ["-device", "qemu-xhci"],
-    ["-device", "usb-kbd"],
-    ["-device", "usb-tablet"],
-    ["-device", "intel-hda"],
-    ["-device", "hda-duplex"],
-    ["-object", "rng-random,filename=/dev/urandom,id=rng0"],
-    ["-device", "virtio-rng-pci,rng=rng0"],
-    ["-device", "virtio-scsi-pci,id=scsi0"],
-    ["-boot", "strict=off"]
   ]
 }
 
