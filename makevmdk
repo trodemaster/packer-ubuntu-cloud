@@ -1,0 +1,3 @@
+wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-arm64.img
+hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount focal-server-cloudimg-arm64.img
+/Applications/VMware\ Fusion\ Tech\ Preview.app/Contents/Library/vmware-vdiskmanager -r /dev/disk5 -s 60G -t 0 ubuntu.vmdk

@@ -1,11 +1,11 @@
 variable "source_image_url" {
   type    = string
-  default = "https://cloud-images.ubuntu.com/focal/20210415/focal-server-cloudimg-amd64.img"
+  default = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 }
 
 variable "source_image_chksum" {
   type    = string
-  default = "sha256:38b82727bfc1b36d9784bf07b8368c1d777450e978837e1cd7fa32b31837e77c"
+  default = "file:https://cloud-images.ubuntu.com/focal/current/SHA256SUMS"
 }
 
 variable "user_password" {
@@ -21,6 +21,7 @@ variable "user_username" {
 }
 
 source "qemu" "base" {
+  qemu_binary      = "qemu-system-aarch64"
   accelerator      = "hvf"
   boot_wait        = "1s"
   cpus             = 6
@@ -32,7 +33,7 @@ source "qemu" "base" {
   http_directory   = "http"
   iso_checksum     = var.source_image_chksum
   iso_url          = var.source_image_url
-  machine_type     = "q35"
+  machine_type     = "virt"
   memory           = 1024 * 6
   net_device       = "virtio-net"
   output_directory = "vm/ubuntu"
@@ -44,7 +45,7 @@ source "qemu" "base" {
   qemuargs = [
     ["-drive", "file=vm/ubuntu/ubuntu.qcow2,if=virtio,cache=unsafe,format=qcow2,id=disk0"],
     ["-drive", "if=virtio,format=raw,file=cloud-init/nocloud.iso,readonly=on,id=cdrom0"],
-    ["-cpu", "qemu64"]
+    ["-cpu", "cortex-a72"]
   ]
 }
 
